@@ -6,12 +6,19 @@ Created on Fri Apr 19 20:18:16 2019
 """
 
 import praw
+import reddit_modules
 from info import ID, SECRET
+from nltk.tokenize import sent_tokenize
 
 reddit = praw.Reddit(client_id=ID,
                      client_secret=SECRET,
                      user_agent='web_mining')
-submission = reddit.submission(id='3g1jfi')
+submission = reddit.submission(id='apeqa2')
 
-for top_level_comment in submission.comments:
-    print(top_level_comment.body)
+sentences = reddit_modules.scrape_comments(reddit, submission)
+    
+#for f in sentences:
+   # print(f)
+    
+summary = reddit_modules.process_comments(sentences)
+print(summary)

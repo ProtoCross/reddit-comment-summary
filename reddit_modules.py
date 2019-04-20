@@ -9,11 +9,38 @@ import praw
 import nltk
 import pickle
 import numpy
+from nltk.tokenize import sent_tokenize
+from praw.models import MoreComments
 
-def scrape_comments():
-    return
+def scrape_comments(reddit, submission):
+    sentences = []
 
+    #Need to ignore MoreComments error for results to display
+    for top_level_comment in submission.comments:
+        if isinstance(top_level_comment, MoreComments):
+            continue
+        sentences.extend(sent_tokenize(top_level_comment.body))
+    return sentences
 
+def process_comments(sentences):
+    words = list()
+    for sent in sentences:
+        words.extend(map(lambda x: x.lower(), nltk.tokenize.word_tokenize(sent)))
+    
+    stopwords = set(nltk.corpus.stopwords.words('english'))
+    for punct in ",.'?:;’“”":
+        stopwords.add(punct)
+    freqDist = nltk.FreqDist(words)
+    
+    N = 12
+    
+    sorted_terms = sorted(freqDist.items(), key=lambda x: x[1], reverse=True)
+    
+    n_most_common = [word[0] for word in sorted_terms if word[0] not in stopwords][:N]
+    
+    summaries = summarize(sentences, n_most_common, 5, 8)
+    
+    return summaries['top-n']
 
 
 def cluster_score(cluster):
