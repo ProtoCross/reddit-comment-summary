@@ -46,7 +46,7 @@ def process_comments(sentences):
     #put 'mean-score' or 'top-n'
     return summaries['mean-score']
 
-
+#Cluster score based on number of significant words ^2 and total words
 def cluster_score(cluster):
     sig_words = len(cluster)
     total_words = cluster[-1] - cluster[0] + 1
@@ -88,7 +88,10 @@ def score_sentences(sentences, important_words, CLUSTER_THRESH=5):
     return scores
  
 def summarize(sentences, important_words, CTHRESH=5, TOP_SENTENCES=5):
+    #Number of sentences wanted
     N = 5
+    
+    #Get score threshold based on average and standard deviation
     scores = score_sentences(sentences, important_words, CTHRESH)
     avg = numpy.mean(scores)
     std_dev = numpy.std(scores)
@@ -98,6 +101,7 @@ def summarize(sentences, important_words, CTHRESH=5, TOP_SENTENCES=5):
     sorted_scores = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)[:TOP_SENTENCES]
     sorted_indexes = sorted([s[0] for s in sorted_scores])
     
+    #Return dictionary of summaries
     return {'top-n': ' '.join([sentences[i] for i in sorted_indexes]),
             'mean-score': ' '.join([sentences[i] for i in mean_scored])}
     

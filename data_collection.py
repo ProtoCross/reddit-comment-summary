@@ -17,6 +17,9 @@ reddit = praw.Reddit(client_id=ID,
                      user_agent='web_mining')
 submission = reddit.submission(id='bg6q6s')
 
+#Pickle the submission for later use
+pickle.dump(submission, open('diwhy.pkl', 'wb'))
+
 #Store content of comments
 sentences = reddit_modules.scrape_comments(reddit, submission)
     
