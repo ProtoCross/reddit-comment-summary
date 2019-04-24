@@ -8,17 +8,16 @@ Created on Fri Apr 19 20:18:16 2019
 import praw
 import reddit_modules
 from info import ID, SECRET
-from nltk.tokenize import sent_tokenize
 import pickle
 
 #Create reddit instance
 reddit = praw.Reddit(client_id=ID,
                      client_secret=SECRET,
                      user_agent='web_mining')
-submission = reddit.submission(id='bgi3ei')
+submission = reddit.submission(id='bg6q6s')
 
 #Pickle the submission for later use
-pickle.dump(submission, open('aww.pkl', 'wb'))
+#pickle.dump(submission, open('aww.pkl', 'wb'))
 
 #Store content of comments
 sentences = reddit_modules.scrape_comments(reddit, submission)

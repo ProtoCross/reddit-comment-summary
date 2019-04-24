@@ -44,7 +44,7 @@ def process_comments(sentences):
     summaries = summarize(sentences, n_most_common, 5, 8)
     
     #put 'mean-score' or 'top-n'
-    return summaries['mean-score']
+    return summaries['top-n']
 
 #Cluster score based on number of significant words ^2 and total words
 def cluster_score(cluster):
@@ -87,23 +87,16 @@ def score_sentences(sentences, important_words, CLUSTER_THRESH=5):
             scores.append(0)
     return scores
  
-def summarize(sentences, important_words, CTHRESH=5, TOP_SENTENCES=5):
-    #Number of sentences wanted
-    N = 5
+def summarize(sentences, important_words, THRESHOLD=5, LENGTH=5):
     
     #Get score threshold based on average and standard deviation
-    scores = score_sentences(sentences, important_words, CTHRESH)
-    avg = numpy.mean(scores)
-    std_dev = numpy.std(scores)
-    score_threshold = avg + 0.5 * std_dev
-    mean_scored = [t[0] for t in enumerate(scores) if t[1] > score_threshold][:N]
+    scores = score_sentences(sentences, important_words, THRESHOLD)
     
-    sorted_scores = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)[:TOP_SENTENCES]
+    sorted_scores = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)[:LENGTH]
     sorted_indexes = sorted([s[0] for s in sorted_scores])
     
     #Return dictionary of summaries
-    return {'top-n': ' '.join([sentences[i] for i in sorted_indexes]),
-            'mean-score': ' '.join([sentences[i] for i in mean_scored])}
+    return {'top-n': ' '.join([sentences[i] for i in sorted_indexes])}
     
 def generate_cloud(summary):
     #Pass summary to wordcloud for generation
